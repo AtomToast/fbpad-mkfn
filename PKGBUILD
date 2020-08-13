@@ -1,7 +1,7 @@
 # Maintainer: aksr <aksr at t-com dot me>
 pkgname=fbpad-mkfn-git
-pkgver=r3.8901524
-pkgrel=2
+pkgver=r5.0e535f4
+pkgrel=1
 epoch=
 pkgdesc="Create fbpad font files."
 arch=('i686' 'x86_64')
@@ -20,9 +20,10 @@ backup=()
 options=()
 changelog=
 install=
-source=("$pkgname::git+git://repo.or.cz/fbpad_mkfn.git")
+source=("$pkgname::git://repo.or.cz/fbpad_mkfn.git" "nerdfonts.patch")
 noextract=()
-md5sums=('SKIP')
+md5sums=('SKIP'
+         'SKIP')
 
 pkgver() {
   cd "$srcdir/$pkgname"
@@ -31,6 +32,8 @@ pkgver() {
 
 prepare() {
   cd "$srcdir/$pkgname"
+
+  patch <"$srcdir/nerdfonts.patch"
   ## if compiled with freetype2 support, package depends on freetype2:
   #sed -i '5s/^/#/; 6s/^/#/; 7s/^/#/; 10s/^#//; 11s/^#//; 12s/^#//' Makefile
 
@@ -46,7 +49,7 @@ build() {
 
 package() {
   cd "$srcdir/$pkgname"
-  install -Dm755 mkfn $pkgdir/usr/bin/fbpad-mkfn
+  install -Dm755 mkfn_ft $pkgdir/usr/bin/fbpad-mkfn
   install -Dm755 gen.sh $pkgdir/usr/share/doc/${pkgname%-*}/gen.sh
   install -Dm644 README $pkgdir/usr/share/doc/${pkgname%-*}/README
 }
